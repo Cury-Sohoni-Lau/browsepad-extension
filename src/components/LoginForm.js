@@ -19,6 +19,7 @@ export default function LoginForm({ setToken }) {
       console.log("Fetched and stored token!");
     });
     setToken(token);
+    chrome.runtime.sendMessage({loggedIn: true});
   };
 
   return (
@@ -46,3 +47,4 @@ export default function LoginForm({ setToken }) {
     </form>
   );
 }
+

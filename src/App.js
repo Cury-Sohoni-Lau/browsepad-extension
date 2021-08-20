@@ -11,9 +11,17 @@ function App() {
     });
   }, []);
 
+const logout = () => {
+  chrome.storage.local.remove(["jwtToken"], () => {
+    console.log("removing the JWT token and timestamp")
+    setToken("")
+  })
+}
+
   return (
     <div className="App">
       {!token ? <LoginForm setToken={setToken} /> : <p>You are logged in.</p>}
+      { token && <button onClick={logout}>Log out</button> }
     </div>
   );
 }
