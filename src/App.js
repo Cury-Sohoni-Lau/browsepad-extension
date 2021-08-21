@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm"
 import AddNoteForm from "./components/AddNoteForm";
+import Notes from "./components/Notes";
 
 function App() {
   const [token, setToken] = useState("");
@@ -14,18 +15,20 @@ function App() {
     });
   }, []);
 
-const logout = () => {
-  chrome.storage.local.remove(["jwtToken"], () => {
-    console.log("removing the JWT token and timestamp")
-    setToken("")
-  })
-}
+  const logout = () => {
+    chrome.storage.local.remove(["jwtToken"], () => {
+      console.log("removing the JWT token and timestamp")
+      setToken("")
+    })
+  }
 
   return (
     <div className="App">
-      {!token && (showRegistration ? <RegisterForm setShowRegistration={setShowRegistration} setToken={setToken}/> : <LoginForm setToken={setToken} setShowRegistration={setShowRegistration} />)}
-      { token && <AddNoteForm token={token}  /> }
-      { token && <button onClick={logout}>Log out</button> }
+      {!token && (showRegistration ? <RegisterForm setShowRegistration={setShowRegistration} setToken={setToken} /> : <LoginForm setToken={setToken} setShowRegistration={setShowRegistration} />)}
+      { token && <>
+        <AddNoteForm token={token} />
+        <Notes token={token} />
+        <button onClick={logout}>Log out</button></>}
     </div>
   );
 }
