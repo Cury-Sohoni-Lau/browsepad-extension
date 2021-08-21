@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -26,7 +26,14 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setShow(false);
+    console.log("url was set to", url)
   };
+
+  useEffect(() => {
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+      setUrl(tabs[0].url);
+    });
+  }, [])
 
   return (
     <>
@@ -49,12 +56,6 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
             type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-          ></input>
-          <p>URL</p>
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
           ></input>
         </Modal.Body>
         <Modal.Footer>
