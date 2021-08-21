@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm"
+import AddNoteForm from "./components/AddNoteForm";
 
 function App() {
   const [token, setToken] = useState("");
+  const [showRegistration, setShowRegistration] = useState(false)
 
   useEffect(() => {
     chrome.storage.local.get(["jwtToken"], (result) => {
@@ -20,7 +23,8 @@ const logout = () => {
 
   return (
     <div className="App">
-      {!token ? <LoginForm setToken={setToken} /> : <p>You are logged in.</p>}
+      {!token && (showRegistration ? <RegisterForm setShowRegistration={setShowRegistration} setToken={setToken}/> : <LoginForm setToken={setToken} setShowRegistration={setShowRegistration} />)}
+      { token && <AddNoteForm token={token}  /> }
       { token && <button onClick={logout}>Log out</button> }
     </div>
   );

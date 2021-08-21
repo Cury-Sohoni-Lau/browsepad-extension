@@ -1,5 +1,5 @@
-//const tokenExpiration = 60 * 60 * 1000;
-const tokenExpiration = 15 * 1000;
+const tokenExpiration = 60 * 60 * 1000;
+//const tokenExpiration = 15 * 1000;
 
 const logout = () => {
   chrome.storage.local.remove(["jwtToken"], () => {
