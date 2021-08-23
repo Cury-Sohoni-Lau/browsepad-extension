@@ -1,7 +1,10 @@
 import React from "react";
 import axios from "axios";
-import Button from "react-bootstrap/Button";
 import host from "../config"
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import { FaTrash, FaPencilAlt } from "react-icons/fa";
+
 
 export default function Note({ note, token, setShowEditForm, setSelectedNote}) {
    const handleShow = () => {
@@ -21,16 +24,22 @@ export default function Note({ note, token, setShowEditForm, setSelectedNote}) {
   };
 
   return (
-    <div>
-      <h3>{note.title}</h3>
-      <p>{note.content}</p>
-      <p>URL: {note.url}</p>
-      <Button variant="danger" onClick={handleDelete}>
-        Delete
-      </Button>
-      <Button variant="primary" onClick={handleShow}>
-        Edit Note
-      </Button>
-    </div>
+    <Card style={{ width: '25rem', margin: "0 auto" }}>
+      <Card.Body>
+        <Card.Title>{note.title}</Card.Title>
+        <Card.Text>
+          {note.content}
+        </Card.Text>
+        <Card.Link href={note.url}>{note.url}</Card.Link>
+        <div className="note-buttons">
+          <Button variant="danger" onClick={handleDelete}>
+            <FaTrash />
+          </Button>
+          <Button variant="primary" onClick={handleShow}>
+            <FaPencilAlt />
+          </Button>
+        </div>
+      </Card.Body>
+    </Card>
   );
 }

@@ -22,3 +22,10 @@ code {
   color: #069;
   cursor: pointer;
 }
+
+.note-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
