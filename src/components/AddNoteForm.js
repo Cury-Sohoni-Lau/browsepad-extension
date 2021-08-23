@@ -27,6 +27,7 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
     );
     setShow(false);
     console.log("url was set to", url)
+    window.location.reload();
   };
 
   useEffect(() => {

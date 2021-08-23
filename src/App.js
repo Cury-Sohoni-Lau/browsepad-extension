@@ -20,6 +20,7 @@ function App() {
       console.log("removing the JWT token and timestamp")
       setToken("")
     })
+    window.location.reload();
   }
 
   return (
