@@ -17,6 +17,7 @@ export default function Note({ note, token, setShowEditForm, setSelectedNote}) {
     axios.delete(`${host}/api/notes/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    window.location.reload();
   };
 
   return (

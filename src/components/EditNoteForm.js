@@ -25,6 +25,7 @@ export default function EditNoteForm({token, selectedNote, setShowEditForm, show
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setShowEditForm(false)
+    window.location.reload();
   };
 
   useEffect(() => {
