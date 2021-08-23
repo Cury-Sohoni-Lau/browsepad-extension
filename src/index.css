@@ -29,9 +29,6 @@ code {
   right: 0;
 }
 
-.card {
-  width: 90vw;
-}
 
 .modal-body input, .modal-body textarea {
   margin: auto;
