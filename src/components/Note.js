@@ -17,14 +17,14 @@ export default function Note({ note, token, setShowEditForm, setSelectedNote}) {
 
   const handleDelete = async (e) => {
     const id = note.id;
-    axios.delete(`${host}/api/notes/${id}`, {
+    await axios.delete(`${host}/api/notes/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     window.location.reload();
   };
 
   return (
-    <Card style={{ width: '25rem', margin: "0 auto" }}>
+    <Card style={{ width: '90vw', margin: "0 auto" }}>
       <Card.Body>
         <Card.Title>{note.title}</Card.Title>
         <Card.Text>

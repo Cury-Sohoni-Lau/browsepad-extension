@@ -30,20 +30,20 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
     window.location.reload();
   };
 
-  useEffect(() => {
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-      setUrl(tabs[0].url);
-    });
+  useEffect(async () => {
+    let [tab] = await chrome.tabs.query({active: true, currentWindow: true})
+    console.log(tab.url)
+    setUrl(tab.url);
   }, [])
 
   return (
     <>
-      <Button onClick={handleShow}>
+      <Button id="add-button" onClick={handleShow}>
         <FaPlus />
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Add Note</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h3>Title</h3>
@@ -53,11 +53,11 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
             onChange={(e) => setTitle(e.target.value)}
           ></input>
           <p>Content</p>
-          <input
+          <textarea
             type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-          ></input>
+          ></textarea>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

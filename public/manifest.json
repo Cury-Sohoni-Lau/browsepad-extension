@@ -2,22 +2,24 @@
   "name": "Browsepad Extension",
   "description": "Leave notes to your future self while browsing the web.",
   "version": "0.1.0",
-  "manifest_version": 2,
-  "icons": {
+  "manifest_version": 3,
+  "icons": {   
     "48": "./icon48.png",
     "128": "./icon128.png"
   },
-  "browser_action": {
-    "default_popup": "./popup.html"
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {   
+      "48": "./icon48.png",
+      "128": "./icon128.png"
+    }
   },
   "background": {
-    "scripts": ["./background.js"]
+    "service_worker": "./background.js"
   },
   "permissions": [
     "activeTab",
     "tabs",
-    "https://www.google.com/*",
-    "<all_urls>",
     "storage"
   ]
 }
