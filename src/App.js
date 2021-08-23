@@ -3,6 +3,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm"
 import AddNoteForm from "./components/AddNoteForm";
 import Notes from "./components/Notes";
+import Button from "react-bootstrap/Button";
 
 function App() {
   const [token, setToken] = useState("");
@@ -29,7 +30,7 @@ function App() {
       { token && <>
         <AddNoteForm token={token} />
         <Notes token={token} />
-        <button onClick={logout}>Log out</button></>}
+        <Button id="button-logout" onClick={logout}>Log out</Button></>}
     </div>
   );
 }

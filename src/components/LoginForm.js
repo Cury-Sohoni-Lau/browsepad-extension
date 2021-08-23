@@ -28,7 +28,7 @@ export default function LoginForm({ setToken, setShowRegistration }) {
   };
 
   return (
-    <Card style={{ width: "20rem", margin: "0 auto" }} className="test">
+    <Card style={{ width: "90vw", margin: "0 auto" }} className="test">
     <Card.Body>
       <Card.Title className="text-center">Login</Card.Title>
       <Form onSubmit={handleSubmit}>

@@ -5,8 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 500px;
-  width: 500px;
+  width: 30rem;
+  min-height: 50rem;
 }
 
 code {
@@ -29,3 +29,15 @@ code {
   right: 0;
 }
 
+.card {
+  width: 90vw;
+}
+
+.modal-body input, .modal-body textarea {
+  margin: auto;
+  width: 90vw;
+}
+
+#button-logout, #add-button {
+  margin: 1rem;
+}

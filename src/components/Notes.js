@@ -9,17 +9,16 @@ export default function Notes({token}) {
   const [notes, setNotes] = useState([]);
   const [showEditForm, setShowEditForm] = useState(false)
 
-  useEffect(() => {
-    const showNotes = async (url) => {
+  useEffect(async () => {
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true})
+    showNotes(tab.url);
+    
+    async function showNotes(url) {
       const response = await axios.post(`${host}/api/notes/url`, { url }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(response.data);
     };
-      chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-        const url  = tabs[0].url;
-        showNotes(url);
-      });
   }, []);
 
   return (

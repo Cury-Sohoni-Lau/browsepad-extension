@@ -37,7 +37,7 @@ export default function EditNoteForm({token, selectedNote, setShowEditForm, show
   return (
     <Modal show={showEditForm} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
+        <Modal.Title>Edit Note</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <h3>Title</h3>
@@ -47,11 +47,11 @@ export default function EditNoteForm({token, selectedNote, setShowEditForm, show
           onChange={(e) => setTitle(e.target.value)}
         ></input>
         <p>Content</p>
-        <input
+        <textarea
           type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-        ></input>
+        ></textarea>
         <p>URL</p>
         <input
           type="text"
