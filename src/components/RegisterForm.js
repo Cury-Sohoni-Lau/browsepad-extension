@@ -5,14 +5,21 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import host from "../config"
+import { isPasswordValid } from "../utils";
 
 export default function RegisterForm({setToken, setShowRegistration}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hidden, setHidden] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isPasswordValid(password)) {
+      setHidden(false);
+      return;
+    }
 
     const response = await axios.post(`${host}/api/register`, {
       name,
@@ -56,6 +63,11 @@ export default function RegisterForm({setToken, setShowRegistration}) {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
+          <div id="invalid-password" className={hidden ? "hidden" : ""}>
+              Password must contain a minimum of eight characters, at least one
+              uppercase letter, one lowercase letter, one number and one special
+              character
+          </div>
           <Button type="submit" className="mx-auto my-2">
             Submit
           </Button>
