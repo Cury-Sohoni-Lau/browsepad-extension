@@ -24,6 +24,7 @@ export default function LoginForm({ setToken, setShowRegistration }) {
       console.log("Fetched and stored token!");
     });
     setToken(token);
+    // sendMessage sends to the background script
     chrome.runtime.sendMessage({loggedIn: true});
   };
 
