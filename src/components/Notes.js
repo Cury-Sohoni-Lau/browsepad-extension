@@ -18,6 +18,9 @@ export default function Notes({token}) {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(response.data);
+      console.log(response.data.length);
+      // set the response.data.length in local storage...
+      
     };
   }, []);
 
