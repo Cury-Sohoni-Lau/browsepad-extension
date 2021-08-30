@@ -9,16 +9,17 @@ chrome.tabs.onActivated.addListener((activeTab) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({url: tab.url}),
+        body: JSON.stringify({ url: tab.url }),
       })
         .then((response) => {
-          console.log(response)
-          if (response.status === 400) return []
-          return response.json()
+          if (response.status >= 400) return [];
+          return response.json();
         })
         .then((notes) => {
-          console.log(notes);
-          const noteCount = notes.length;
+          let noteCount = String(notes.length);
+          if (noteCount == 0) {
+            noteCount = "";
+          }
           chrome.action.setBadgeText({ text: "" + noteCount });
         });
     });
