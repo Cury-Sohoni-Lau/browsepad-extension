@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
+import { Context } from "../Store";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { FaPlus } from "react-icons/fa";
-import host from "../config";
+import { host } from "../utils";
 
-export default function AddNoteForm( {token, setShowRegistration} ) {
+export default function AddNoteForm() {
+  const [state, dispatch] = useContext(Context);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -23,27 +25,27 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
         content: content,
         url: url,
       },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { Authorization: `Bearer ${state.token}` } }
     );
     setShow(false);
-    console.log("url was set to", url)
-    window.location.reload();
+    // window.location.reload();
+    dispatch({ type: "REFRESH" });
   };
 
   useEffect(async () => {
-    let [tab] = await chrome.tabs.query({active: true, currentWindow: true})
-    console.log(tab.url)
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    console.log(tab.url);
     setUrl(tab.url);
-  }, [])
+  }, []);
 
   return (
     <>
-      <Button id="add-button" onClick={handleShow}>
+      <Button onClick={handleShow}>
         <FaPlus />
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Note</Modal.Title>
+          <Modal.Title>Add note</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h3>Title</h3>
@@ -54,7 +56,6 @@ export default function AddNoteForm( {token, setShowRegistration} ) {
           ></input>
           <p>Content</p>
           <textarea
-            type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           ></textarea>

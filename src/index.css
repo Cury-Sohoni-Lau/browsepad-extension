@@ -14,34 +14,18 @@ code {
     monospace;
 }
 
-.link-button {
-  background: none;
-  text-decoration: underline;
-  border: none;
-  padding: 0;
-  color: #069;
-  cursor: pointer;
+#notes-main {
+  display: flex;
+  flex-grow: 999;
 }
 
-.note-buttons {
-  position: absolute;
-  top: 0;
-  right: 0;
+#notes-wrapper {
+  margin: auto;
 }
 
 .card {
-  width: 90vw;
-}
-
-.modal-body input,
-.modal-body textarea {
-  margin: auto;
-  width: 90vw;
-}
-
-#button-logout,
-#add-button {
-  margin: 1rem;
+  min-width: 60vw;
+  width: 60vw;
 }
 
 #invalid-password {
@@ -54,6 +38,10 @@ code {
   display: none;
 }
 
+.suggested-user {
+  border: 1px solid black;
+}
+
 #share-modal {
   display: flex;
   flex-direction: column;
@@ -63,4 +51,23 @@ code {
   position: fixed;
   top: 10px;
   right: 50vw;
+}
+
+.profile-pic-small {
+  width: 40px;
+  height: 40px;
+}
+
+.profile-pic-big {
+  width: 10vw;
+  height: 10vw;
+}
+
+.circle-pic {
+  display: block;
+  background: #e6e7ed;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  background-size: cover;
 }

@@ -1,43 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import host from "../config"
+import { Context } from "../Store";
+import { host } from "../utils";
 
-export default function EditNoteForm({token, selectedNote, setShowEditForm, showEditForm}) {
+export default function EditNoteForm() {
+  const [state, dispatch] = useContext(Context);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [content, setContent] = useState("");
 
   const handleClose = () => {
-    setShowEditForm(false)
-  }
+    dispatch({ type: "TOGGLE_SHOW_EDIT_FORM" });
+  };
 
   const handleSubmit = async (e) => {
-    const id = selectedNote.id;
+    const id = state.selectedNote.id;
     await axios.patch(
       `${host}/api/notes/${id}`,
       {
         title: title,
         content: content,
+        user_id: state.user.id,
         url: url,
       },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { Authorization: `Bearer ${state.token}` } }
     );
-    setShowEditForm(false)
-    window.location.reload();
+    dispatch({ type: "TOGGLE_SHOW_EDIT_FORM" });
+    // window.location.reload();
+    dispatch({ type: "REFRESH" });
   };
 
   useEffect(() => {
-    setTitle(selectedNote.title);
-    setContent(selectedNote.content);
-    setUrl(selectedNote.url);
-  }, [selectedNote]);
+    setTitle(state.selectedNote.title);
+    setContent(state.selectedNote.content);
+    setUrl(state.selectedNote.url);
+  }, [state.selectedNote]);
 
   return (
-    <Modal show={showEditForm} onHide={handleClose}>
+    <Modal show={state.showEditForm} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Note</Modal.Title>
+        <Modal.Title>Edit note</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <h3>Title</h3>
@@ -48,7 +52,6 @@ export default function EditNoteForm({token, selectedNote, setShowEditForm, show
         ></input>
         <p>Content</p>
         <textarea
-          type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
