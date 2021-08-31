@@ -1,57 +1,92 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
+import { Context } from "../Store";
 import axios from "axios";
 import Note from "./Note";
+import AddNoteForm from "./AddNoteForm";
 import EditNoteForm from "./EditNoteForm";
-import host from "../config";
+import NotesSidebar from "./NotesSidebar";
+import { extractHashtags, host } from "../utils";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 
-export default function Notes({ token }) {
-  const [selectedNote, setSelectedNote] = useState({});
-  const [notes, setNotes] = useState([]);
-  const [showEditForm, setShowEditForm] = useState(false);
+export default function Notes() {
+  let parentMatch = useRouteMatch();
+  const [state, dispatch] = useContext(Context);
   const [showShareSuccess, setShowShareSuccess] = useState(false);
 
-  useEffect(async () => {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-    showNotes(tab.url);
+  useEffect(() => {
+    if (state.token) {
+      const setNotes = async () => {
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
+        const url = tab.url;
+        let response = await axios.post(
+          `${host}/api/notes/url`,
+          { url },
+          {
+            headers: { Authorization: `Bearer ${state.token}` },
+          }
+        );
 
-    async function showNotes(url) {
-      const response = await axios.post(
-        `${host}/api/notes/url`,
-        { url },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setNotes(response.data);
-      console.log(response.data.length);
-      // set the response.data.length in local storage...
+        let myNotes = response.data;
+        myNotes = myNotes.map((note) => {
+          return {
+            ...note,
+            hashtags: extractHashtags(note) || [],
+          };
+        });
+        dispatch({ type: "SET_MY_NOTES", payload: myNotes });
+        dispatch({ type: "SET_NOTES", payload: myNotes });
+
+        response = await axios.get(`${host}/api/notes/shared`, {
+          headers: { Authorization: `Bearer ${state.token}` },
+        });
+        let sharedNotes = response.data;
+        sharedNotes = sharedNotes.map((note) => {
+          return {
+            ...note,
+            hashtags: extractHashtags(note) || [],
+          };
+        });
+        dispatch({ type: "SET_SHARED_NOTES", payload: sharedNotes });
+      };
+      setNotes();
     }
-  }, []);
+  }, [state.token, dispatch, state.refresh]);
 
   return (
-    <div>
-      {notes.map((note) => (
-        <Note
-          key={note.id}
-          note={note}
-          token={token}
-          setSelectedNote={setSelectedNote}
-          setShowEditForm={setShowEditForm}
-          setShowShareSuccess={setShowShareSuccess}
-        />
-      ))}
-      <EditNoteForm
-        token={token}
-        showEditForm={showEditForm}
-        setShowEditForm={setShowEditForm}
-        selectedNote={selectedNote}
+    <Switch>
+      <Route
+        path={`${parentMatch.url}/:noteID`}
+        render={({ match }) => (
+          <Note noteID={match.params.noteID} isPublicLink={true} />
+        )}
       />
-      <div id="share-success" className={showShareSuccess ? "" : "hidden"}>
-        YOU SHARED A NOTE!!!!
-      </div>
-    </div>
+      <Route path={parentMatch.url}>
+        <div>
+          <AddNoteForm />
+          <EditNoteForm />
+          <NotesSidebar />
+          <div id="notes-main">
+            <div id="notes-wrapper">
+              {state.filteredNotes.map((note) => (
+                <Note
+                  key={note.id}
+                  passedNote={note}
+                  setShowShareSuccess={setShowShareSuccess}
+                />
+              ))}
+            </div>
+            <div
+              id="share-success"
+              className={showShareSuccess ? "" : "hidden"}
+            >
+              YOU SHARED A NOTE!!!!
+            </div>
+          </div>
+        </div>
+      </Route>
+    </Switch>
   );
 }

@@ -1,38 +1,70 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Context } from "../Store";
 import axios from "axios";
-import host from "../config";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import moment from "moment";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { LinkPreview } from "@dhaiwat10/react-link-preview";
-import ReactMarkdown from "react-markdown";
 import ShareModal from "./ShareModal";
+import ReactMarkdown from "react-markdown";
+import { host } from "../utils";
 
 export default function Note({
-  note,
-  token,
-  setShowEditForm,
-  setSelectedNote,
+  passedNote,
+  noteID,
   setShowShareSuccess,
+  isPublicLink,
 }) {
+  const [state, dispatch] = useContext(Context);
+  const [note, setNote] = useState({
+    content: "",
+  });
   const [showUserName, setShowUserName] = useState(false);
+
   const handleShow = () => {
-    console.log("clicked edit button");
-    setSelectedNote(note);
-    setShowEditForm(true);
+    dispatch({ type: "SET_SELECTED_NOTE", payload: note });
+    dispatch({ type: "TOGGLE_SHOW_EDIT_FORM" });
   };
 
   const handleDelete = async (e) => {
     const id = note.id;
     await axios.delete(`${host}/api/notes/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${state.token}` },
     });
-    window.location.reload();
+    // window.location.reload();
+    dispatch({ type: "REFRESH" });
   };
 
+  const getPublicNote = async (noteID) => {
+    const response = await axios.get(`${host}/api/notes/shared/${noteID}`);
+    console.log("retrieved note:", response.data);
+    return response.data;
+  };
+
+  useEffect(() => {
+    const getNote = async () => {
+      if (!passedNote && noteID) {
+        try {
+          const retrievedNote = await getPublicNote(noteID);
+          setNote(retrievedNote);
+        } catch {
+          setNote({
+            title: "Note Not Found",
+            content:
+              "This note does not exist or it is not being shared publicly.",
+          });
+        }
+      } else {
+        setNote(passedNote);
+      }
+    };
+    getNote();
+  }, [passedNote, noteID]);
+
   return (
-    <Card style={{ width: "90vw", margin: "0 auto" }}>
+    <Card>
       <Card.Body>
         <Card.Title>{note.title}</Card.Title>
         {typeof note.image != "undefined" && (
@@ -55,6 +87,7 @@ export default function Note({
             {note.name}
           </p>
         )}
+
         <ReactMarkdown>{note.content}</ReactMarkdown>
         <Card.Subtitle className="mb-2 text-muted">
           {"Created: " + moment(note.created_at).fromNow()}
@@ -62,20 +95,19 @@ export default function Note({
         <Card.Subtitle className="mb-2 text-muted">
           {"Modified: " + moment(note.modified_at).fromNow()}
         </Card.Subtitle>
-        <LinkPreview url={note.url} width="55vw" />
-        <div className="note-buttons">
-          <Button variant="danger" onClick={handleDelete}>
-            <FaTrash />
-          </Button>
-          <Button variant="primary" onClick={handleShow}>
-            <FaPencilAlt />
-          </Button>
-          <ShareModal
-            note={note}
-            setShowShareSuccess={setShowShareSuccess}
-            token={token}
-          />
-        </div>
+        {/* <Card.Link href={note.url}>{note.url}</Card.Link> */}
+        {note.url && <LinkPreview url={note.url} width="55vw" />}
+        {!state.showingSharedNotes && !isPublicLink && (
+          <div className="note-buttons">
+            <Button variant="danger" onClick={handleDelete}>
+              <FaTrash />
+            </Button>
+            <Button variant="primary" onClick={handleShow}>
+              <FaPencilAlt />
+            </Button>
+            <ShareModal note={note} setShowShareSuccess={setShowShareSuccess} />
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import axios from "axios";
-import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import host from "../config"
+import { storeUserAndToken, host } from "../utils";
+import { Context } from "../Store";
+import { useHistory, Link } from "react-router-dom";
+import { Card, Form, Button } from "react-bootstrap";
 import { isPasswordValid } from "../utils";
 
-export default function RegisterForm({setToken, setShowRegistration}) {
+export default function RegisterForm() {
+  const [, dispatch] = useContext(Context);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hidden, setHidden] = useState(true);
+  const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,22 +22,19 @@ export default function RegisterForm({setToken, setShowRegistration}) {
       setHidden(false);
       return;
     }
-
     const response = await axios.post(`${host}/api/register`, {
       name,
       email,
       password,
     });
-    const token = response.data.jwtToken;
-    chrome.storage.local.set({ jwtToken: token }, () => {
-      console.log("Fetched and stored token!");
+    chrome.storage.local.set({ jwtToken: response.data.jwtToken }, () => {
+      storeUserAndToken(dispatch);
+      history.push("/notes");
     });
-    setToken(token);
-    chrome.runtime.sendMessage({loggedIn: true});
   };
 
   return (
-    <Card style={{ width: "90vw", margin: "0 auto" }} className="test">
+    <Card style={{ width: "20rem", margin: "0 auto" }} className="test">
       <Card.Body>
         <Card.Title className="text-center">Register</Card.Title>
         <Form onSubmit={handleSubmit}>
@@ -62,21 +61,21 @@ export default function RegisterForm({setToken, setShowRegistration}) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </Form.Group>
-          <div id="invalid-password" className={hidden ? "hidden" : ""}>
+            <div id="invalid-password" className={hidden ? "hidden" : ""}>
               Password must contain a minimum of eight characters, at least one
               uppercase letter, one lowercase letter, one number and one special
               character
-          </div>
+            </div>
+          </Form.Group>
           <Button type="submit" className="mx-auto my-2">
             Submit
           </Button>
           <p>
             Already have an account?
-            {" "}
-            <button class="link-button" onClick={() => setShowRegistration(false)}>
+            <Link to="/login" style={{ textDecoration: "none" }}>
+              {" "}
               Login
-            </button>
+            </Link>
           </p>
         </Form>
       </Card.Body>

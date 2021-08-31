@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
-// import SuggestedUser from "./SuggestedUser";
+import React, { useState, useEffect, useContext } from "react";
+import SuggestedUser from "./SuggestedUser";
 import axios from "axios";
+import { Context } from "../Store";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { host } from "../utils";
 
-export default function ShareModal({ note, setShowShareSuccess, token }) {
+export default function ShareModal({ note, setShowShareSuccess }) {
+  const [state] = useContext(Context);
   const [recipient, setRecipient] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -13,8 +16,8 @@ export default function ShareModal({ note, setShowShareSuccess, token }) {
 
   useEffect(() => {
     const getUsers = async () => {
-      const response = await axios(`/api/users/shared`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios(`${host}/api/users/shared`, {
+        headers: { Authorization: `Bearer ${state.token}` },
       });
       setSuggestedUsers(response.data);
     };
@@ -30,11 +33,11 @@ export default function ShareModal({ note, setShowShareSuccess, token }) {
   const generateShareableLink = async () => {
     try {
       const response = await axios.post(
-        `/api/notes/share/${note.id}`,
+        `${host}/api/notes/share/${note.id}`,
         { public: true },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${state.token}` } }
       );
-      setGeneratedLink(`${window.location.href}/${note.id}`);
+      setGeneratedLink(`${host}/notes/${note.id}`);
     } catch (error) {
       //TODO - show red box with error text
       console.log("COULDNT SHARE.");
@@ -44,10 +47,11 @@ export default function ShareModal({ note, setShowShareSuccess, token }) {
   const handleShare = async (user) => {
     const email = user ? user.email : recipient;
     try {
+      console.log("HEEEY");
       await axios.post(
-        `/api/notes/${note.id}/share`,
+        `${host}/api/notes/${note.id}/share`,
         { email },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${state.token}` } }
       );
       setShowShareModal(false);
       setShowShareSuccess(true);
@@ -83,9 +87,9 @@ export default function ShareModal({ note, setShowShareSuccess, token }) {
               <Button onClick={generateShareableLink}>
                 Get shareable link
               </Button>
-              {/* {suggestedUsers.map((user) => (
+              {suggestedUsers.map((user) => (
                 <SuggestedUser user={user} handleShare={handleShare} />
-              ))} */}
+              ))}
             </div>
           )}
         </Modal.Body>
