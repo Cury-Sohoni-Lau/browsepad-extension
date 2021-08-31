@@ -33,12 +33,14 @@ code {
   width: 90vw;
 }
 
-.modal-body input, .modal-body textarea {
+.modal-body input,
+.modal-body textarea {
   margin: auto;
   width: 90vw;
 }
 
-#button-logout, #add-button {
+#button-logout,
+#add-button {
   margin: 1rem;
 }
 
@@ -50,4 +52,15 @@ code {
 
 .hidden {
   display: none;
+}
+
+#share-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+#share-success {
+  position: fixed;
+  top: 10px;
+  right: 50vw;
 }
