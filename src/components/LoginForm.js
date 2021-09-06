@@ -3,10 +3,14 @@ import axios from "axios";
 import { storeUserAndToken, host } from "../utils";
 import { Context } from "../Store";
 import { useHistory, Link } from "react-router-dom";
-import { Card, Button, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import useStyles from "../styles";
 
 export default function LoginForm() {
+  const classes = useStyles();
   const [, dispatch] = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,43 +25,78 @@ export default function LoginForm() {
     chrome.storage.local.set({ jwtToken: response.data.jwtToken }, () => {
       storeUserAndToken(dispatch);
       history.push("/notes");
-    });
+    })
   };
 
   return (
-    <Card style={{ width: "20rem", margin: "0 auto" }} className="test">
-      <Card.Body>
-        <Card.Title className="text-center">Login</Card.Title>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group>
-            <Form.Label className="mx-auto my-2">Email</Form.Label>
-            <Form.Control
-              name="email"
-              type="email"
-              placeholder="example@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Form.Label className="mx-auto my-2">Password</Form.Label>
-            <Form.Control
-              name="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-          <Button type="submit" className="mx-auto my-2">
-            Submit
+    <Container
+      maxWidth="sm"
+      className={`${classes.authForm} ${classes.shadowWeak}`}
+      style={{ marginTop: "3rem" }}
+    >
+      <form onSubmit={handleSubmit}>
+        <Container className={classes.flexColumnContainer}>
+          <TextField
+            style={{ marginTop: "2rem" }}
+            className={classes.authFormField}
+            label="Email"
+            variant="filled"
+            type="email"
+            placeholder="user@example.com"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            style={{ marginTop: "0.5rem" }}
+            className={classes.authFormField}
+            label="Password"
+            variant="filled"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            className={`${classes.button} ${classes.buttonPurple} ${classes.shadowWeak}`}
+            style={{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+              padding: "5px 25px",
+            }}
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Login
           </Button>
           <p>
-            New user?
+            New user?{" "}
             <Link to="/register" style={{ textDecoration: "none" }}>
-              {" "}
               Create an account
             </Link>
           </p>
-        </Form>
-      </Card.Body>
-    </Card>
+        </Container>
+      </form>
+    </Container>
+
+    // <Grid
+    //   container
+    //   spacing={0}
+    //   direction="column"
+    //   alignItems="center"
+    //   justify="center"
+    //   style={{ minHeight: "100vh" }}
+    // >
+    //   <form onSubmit={handleSubmit}>
+    //     <Grid item xs>
+
+    //     </Grid>
+    //     <Grid item xs>
+
+    //     </Grid>
+
+    //   </form>
+
+    // </Grid>
   );
 }

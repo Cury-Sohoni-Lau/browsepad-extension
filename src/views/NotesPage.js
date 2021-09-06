@@ -6,8 +6,8 @@ export default function NotesPage() {
   const [state] = useContext(Context);
 
   return (
-    <div>
-      {state.user && state.user.name ? <><p>Hello, {state.user.name}</p><Notes /></> : ""}
+    <div style={{overflowY: "scroll"}}>
+      <Notes />
     </div>
   );
 }
