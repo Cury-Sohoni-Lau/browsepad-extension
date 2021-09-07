@@ -57,67 +57,6 @@ export default function HomePage() {
           <span ref={textRef}></span>
         </Typography>
         <div className={classes.parallax}></div>
-        <Grid container className={classes.gridContainer} justify="center">
-          <Grid item xs={12} sm={12} md={6}>
-            <Card className={classes.card}>
-              <div className={classes.cardDetails}>
-                <CardContent>
-                  <Typography component="h2" variant="h5">
-                    Browsepad lets you write memos on web pages
-                  </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    Add a note using our Chrome extension
-                  </Typography>
-                  <Typography variant="subtitle1" paragraph>
-                    Look over here 👉🏼
-                  </Typography>
-                  <Typography variant="subtitle1" color="primary">
-                    <CardActions>
-                      <a href={`${host}/dist.crx`}>Download</a>
-                    </CardActions>
-                  </Typography>
-                </CardContent>
-              </div>
-              {/* <Hidden xsDown> */}
-              <CardMedia
-                className={classes.cardMedia}
-                image={"https://source.unsplash.com/random"}
-              />
-              {/* </Hidden> */}
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <Card className={classes.card}>
-              <div className={classes.cardDetails}>
-                <CardContent>
-                  <Typography
-                    component="h2"
-                    variant="h5"
-                    // style={{ fontWeight: "bold" }}
-                  >
-                    Add, edit, and delete memos directly with our Chrome
-                    extension or through our web app. Share memos with friends
-                    and family.
-                  </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    color="textSecondary"
-                  ></Typography>
-                  <Typography variant="subtitle1" paragraph></Typography>
-                  <Typography variant="subtitle1" color="primary">
-                    <CardActions></CardActions>
-                  </Typography>
-                </CardContent>
-              </div>
-              <Hidden xsDown>
-                <CardMedia
-                  className={classes.cardMedia}
-                  image={"https://source.unsplash.com/random"}
-                />
-              </Hidden>
-            </Card>
-          </Grid>
-        </Grid>
         <Typography
           style={{ fontFamily: "Rubik" }}
           className={`${classes.teamTitle} ${classes.title}`}
